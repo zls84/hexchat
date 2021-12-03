@@ -585,6 +585,7 @@ typedef struct server
 	unsigned int use_ssl:1;				  /* is server SSL capable? */
 	unsigned int accept_invalid_cert:1;/* ignore result of server's cert. verify */
 #endif
+	unsigned int have_twitchtv_tags : 1; /* have twitch.tv/tags:  */
 } server;
 
 typedef int (*cmd_callback) (struct session * sess, char *tbuf, char *word[],

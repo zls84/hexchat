@@ -1687,6 +1687,8 @@ inbound_toggle_caps (server *serv, const char *extensions_str, gboolean enable)
 				tcp_sendf (serv, "AUTHENTICATE %s\r\n", sasl_mechanisms[serv->sasl_mech]);
 			}
 		}
+		else if (!strcmp (extension, "twitch.tv/tags"))
+			serv->have_twitchtv_tags = enable;
 	}
 
 	g_strfreev (extensions);
@@ -1735,6 +1737,7 @@ static const char * const supported_caps[] = {
 
 	/* Twitch */
 	"twitch.tv/membership",
+	"twitch.tv/tags",
 
 	/* Solanum */
 	"solanum.chat/identify-msg",
