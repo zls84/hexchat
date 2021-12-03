@@ -652,7 +652,7 @@ get_stamp_str (char *fmt, time_t tim, char **ret)
 }
 
 static void
-log_write (session *sess, char *text, time_t ts)
+log_write (session *sess, char *text, char* custom_reward_id, time_t ts)
 {
 	char *temp;
 	char *stamp;
@@ -706,6 +706,12 @@ log_write (session *sess, char *text, time_t ts)
 			write (sess->logfd, stamp, len);
 			g_free (stamp);
 		}
+	}
+
+	if (custom_reward_id)
+	{
+		len = strlen (custom_reward_id);
+		write(sess->logfd, custom_reward_id, len);
 	}
 
 	temp = strip_color (text, -1, STRIP_ALL);
@@ -835,7 +841,7 @@ G_GNUC_END_IGNORE_DEPRECATIONS
 }
 
 void
-PrintTextTimeStamp (session *sess, char *text, time_t timestamp)
+PrintTextTimeStamp (session *sess, char *text, char* custom_reward_id, time_t timestamp)
 {
 	if (!sess)
 	{
@@ -854,7 +860,7 @@ PrintTextTimeStamp (session *sess, char *text, time_t timestamp)
 		text = text_fixup_invalid_utf8 (text, -1, NULL);
 	}
 
-	log_write (sess, text, timestamp);
+	log_write (sess, text, custom_reward_id, timestamp);
 	scrollback_save (sess, text, timestamp);
 	fe_print_text (sess, text, timestamp, FALSE);
 	g_free (text);
@@ -863,7 +869,13 @@ PrintTextTimeStamp (session *sess, char *text, time_t timestamp)
 void
 PrintText (session *sess, char *text)
 {
-	PrintTextTimeStamp (sess, text, 0);
+	PrintTextTimeStamp (sess, text, NULL, 0);
+}
+
+void
+PrintTextTags (session *sess, char *text, char *custom_reward_id)
+{
+	PrintTextTimeStamp (sess, text, custom_reward_id, 0);
 }
 
 void
@@ -890,7 +902,7 @@ PrintTextTimeStampf (session *sess, time_t timestamp, const char *format, ...)
 	buf = g_strdup_vprintf (format, args);
 	va_end (args);
 
-	PrintTextTimeStamp (sess, buf, timestamp);
+	PrintTextTimeStamp (sess, buf, NULL, timestamp);
 	g_free (buf);
 }
 
@@ -1811,12 +1823,12 @@ format_event (session *sess, int index, char **args, char *o, gsize sizeofo, uns
 
 static void
 display_event (session *sess, int event, char **args, 
-					unsigned int stripcolor_args, time_t timestamp)
+					unsigned int stripcolor_args, char* custom_reward_id, time_t timestamp)
 {
 	char o[4096];
 	format_event (sess, event, args, o, sizeof (o), stripcolor_args);
 	if (o[0])
-		PrintTextTimeStamp (sess, o, timestamp);
+		PrintTextTimeStamp (sess, o, custom_reward_id, timestamp);
 }
 
 int
@@ -2033,7 +2045,7 @@ text_color_of (char *name)
 
 void
 text_emit (int index, session *sess, char *a, char *b, char *c, char *d,
-			  time_t timestamp)
+			  char* custom_reward_id, time_t timestamp)
 {
 	char *word[PDIWORDS];
 	int i;
@@ -2129,7 +2141,7 @@ text_emit (int index, session *sess, char *a, char *b, char *c, char *d,
 
 	if (!prefs.hex_away_omit_alerts || !sess->server->is_away)
 		sound_play_event (index);
-	display_event (sess, index, word, stripcolor_args, timestamp);
+	display_event (sess, index, word, stripcolor_args, custom_reward_id, timestamp);
 }
 
 char *
@@ -2146,14 +2158,14 @@ text_find_format_string (char *name)
 
 int
 text_emit_by_name (char *name, session *sess, time_t timestamp,
-				   char *a, char *b, char *c, char *d)
+				   char *a, char *b, char *c, char *d, char *custom_reward_id)
 {
 	int i = 0;
 
 	i = pevent_find (name, &i);
 	if (i >= 0)
 	{
-		text_emit (i, sess, a, b, c, d, timestamp);
+		text_emit (i, sess, a, b, c, d, custom_reward_id, timestamp);
 		return 1;
 	}
 

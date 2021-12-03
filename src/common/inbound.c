@@ -463,8 +463,8 @@ inbound_chanmsg (server *serv, session *sess, char *chan, char *from,
 	{
 		if (prefs.hex_away_auto_unmark && serv->is_away && !tags_data->timestamp)
 			sess->server->p_set_back (sess->server);
-		EMIT_SIGNAL_TIMESTAMP (XP_TE_UCHANMSG, sess, from, text, nickchar, NULL,
-									  0, tags_data->timestamp);
+		EMIT_SIGNAL_TAGS_TIMESTAMP (XP_TE_UCHANMSG, sess, from, text, nickchar, NULL,
+									  0, tags_data->custom_reward_id, tags_data->timestamp);
 		return;
 	}
 
@@ -474,14 +474,14 @@ inbound_chanmsg (server *serv, session *sess, char *chan, char *from,
 		hilight = TRUE;
 
 	if (sess->type == SESS_DIALOG)
-		EMIT_SIGNAL_TIMESTAMP (XP_TE_DPRIVMSG, sess, from, text, idtext, NULL, 0,
-									  tags_data->timestamp);
+		EMIT_SIGNAL_TAGS_TIMESTAMP (XP_TE_DPRIVMSG, sess, from, text, idtext, NULL, 0,
+									  tags_data->custom_reward_id, tags_data->timestamp);
 	else if (hilight)
-		EMIT_SIGNAL_TIMESTAMP (XP_TE_HCHANMSG, sess, from, text, nickchar, idtext,
-									  0, tags_data->timestamp);
+		EMIT_SIGNAL_TAGS_TIMESTAMP (XP_TE_HCHANMSG, sess, from, text, nickchar, idtext,
+									  0, tags_data->custom_reward_id, tags_data->timestamp);
 	else
-		EMIT_SIGNAL_TIMESTAMP (XP_TE_CHANMSG, sess, from, text, nickchar, idtext,
-									  0, tags_data->timestamp);
+		EMIT_SIGNAL_TAGS_TIMESTAMP (XP_TE_CHANMSG, sess, from, text, nickchar, idtext,
+									  0, tags_data->custom_reward_id, tags_data->timestamp);
 }
 
 void

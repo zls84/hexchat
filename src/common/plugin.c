@@ -1726,7 +1726,7 @@ hexchat_emit_print (hexchat_plugin *ph, const char *event_name, ...)
 	}
 
 	i = text_emit_by_name ((char *)event_name, ph->context, (time_t) 0,
-						   argv[0], argv[1], argv[2], argv[3]);
+						   argv[0], argv[1], argv[2], argv[3], NULL);
 	va_end (args);
 
 	return i;
@@ -1754,7 +1754,7 @@ hexchat_emit_print_attrs (hexchat_plugin *ph, hexchat_event_attrs *attrs,
 	}
 
 	i = text_emit_by_name ((char *)event_name, ph->context, attrs->server_time_utc,
-						   argv[0], argv[1], argv[2], argv[3]);
+						   argv[0], argv[1], argv[2], argv[3], NULL);
 	va_end (args);
 
 	return i;

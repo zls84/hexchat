@@ -548,8 +548,8 @@ notify_showlist (struct session *sess, const message_tags_data *tags_data)
 	struct notify_per_server *servnot;
 	int i = 0;
 
-	EMIT_SIGNAL_TIMESTAMP (XP_TE_NOTIFYHEAD, sess, NULL, NULL, NULL, NULL, 0,
-								  tags_data->timestamp);
+	EMIT_SIGNAL_TAGS_TIMESTAMP (XP_TE_NOTIFYHEAD, sess, NULL, NULL, NULL, NULL, 0,
+								  tags_data->custom_reward_id, tags_data->timestamp);
 	while (list)
 	{
 		i++;
@@ -559,17 +559,17 @@ notify_showlist (struct session *sess, const message_tags_data *tags_data)
 			g_snprintf (outbuf, sizeof (outbuf), _("  %-20s online\n"), notify->name);
 		else
 			g_snprintf (outbuf, sizeof (outbuf), _("  %-20s offline\n"), notify->name);
-		PrintTextTimeStamp (sess, outbuf, tags_data->timestamp);
+		PrintTextTimeStamp (sess, outbuf, tags_data->custom_reward_id, tags_data->timestamp);
 		list = list->next;
 	}
 	if (i)
 	{
 		sprintf (outbuf, "%d", i);
-		EMIT_SIGNAL_TIMESTAMP (XP_TE_NOTIFYNUMBER, sess, outbuf, NULL, NULL, NULL,
-									  0, tags_data->timestamp);
+		EMIT_SIGNAL_TAGS_TIMESTAMP (XP_TE_NOTIFYNUMBER, sess, outbuf, NULL, NULL, NULL,
+									  0, tags_data->custom_reward_id, tags_data->timestamp);
 	} else
-		EMIT_SIGNAL_TIMESTAMP (XP_TE_NOTIFYEMPTY, sess, NULL, NULL, NULL, NULL, 0,
-									  tags_data->timestamp);
+		EMIT_SIGNAL_TAGS_TIMESTAMP (XP_TE_NOTIFYEMPTY, sess, NULL, NULL, NULL, NULL, 0,
+									  tags_data->custom_reward_id, tags_data->timestamp);
 }
 
 int

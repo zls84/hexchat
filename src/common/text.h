@@ -25,9 +25,14 @@
 
 /* timestamp is non-zero if we are using server-time */
 #define EMIT_SIGNAL_TIMESTAMP(i, sess, a, b, c, d, e, timestamp) \
-	text_emit(i, sess, a, b, c, d, timestamp)
+	text_emit(i, sess, a, b, c, d, NULL, timestamp)
 #define EMIT_SIGNAL(i, sess, a, b, c, d, e) \
-	text_emit(i, sess, a, b, c, d, 0)
+	text_emit(i, sess, a, b, c, d, NULL, 0)
+
+#define EMIT_SIGNAL_TAGS_TIMESTAMP(i, sess, a, b, c, d, e, custom_reward_id, timestamp) \
+	text_emit(i, sess, a, b, c, d, custom_reward_id, timestamp)
+#define EMIT_SIGNAL_TAGS(i, sess, a, b, c, d, e, custom_reward_id) \
+	text_emit(i, sess, a, b, c, d, custom_reward_id, 0)
 
 struct text_event
 {
@@ -42,7 +47,8 @@ void scrollback_load (session *sess);
 
 int text_word_check (char *word, int len);
 void PrintText (session *sess, char *text);
-void PrintTextTimeStamp (session *sess, char *text, time_t timestamp);
+void PrintTextTags(session* sess, char* text, char* custom_reward_id);
+void PrintTextTimeStamp (session *sess, char *text, char* custom_reward_id, time_t timestamp);
 void PrintTextf (session *sess, const char *format, ...) G_GNUC_PRINTF (2, 3);
 void PrintTextTimeStampf (session *sess, time_t timestamp, const char *format, ...) G_GNUC_PRINTF (3, 4);
 void log_close (session *sess);
@@ -54,9 +60,9 @@ int pevent_load (char *filename);
 void pevent_make_pntevts (void);
 int text_color_of (char *name);
 void text_emit (int index, session *sess, char *a, char *b, char *c, char *d,
-		time_t timestamp);
+		char *custom_reward_id, time_t timestamp);
 int text_emit_by_name (char *name, session *sess, time_t timestamp,
-					   char *a, char *b, char *c, char *d);
+					   char *a, char *b, char *c, char *d, char* custom_reward_id);
 gchar *text_convert_invalid (const gchar* text, gssize len, GIConv converter, const gchar *fallback, gsize *len_out);
 gchar *text_fixup_invalid_utf8 (const gchar* text, gssize len, gsize *len_out);
 int get_stamp_str (char *fmt, time_t tim, char **ret);
