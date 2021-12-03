@@ -1550,6 +1550,12 @@ handle_message_tags (server *serv, const char *tags_str,
 
 		if (serv->have_server_time && !strcmp (key, "time"))
 			handle_message_tag_time (value, tags_data);
+
+		if (serv->have_twitchtv_tags)
+		{
+			if (!strcmp(key, "custom-reward-id"))
+				tags_data->custom_reward_id = g_strdup (value);
+		}
 	}
 	
 	g_strfreev (tags);
@@ -1653,6 +1659,7 @@ void
 message_tags_data_free (message_tags_data *tags_data)
 {
 	g_clear_pointer (&tags_data->account, g_free);
+	g_clear_pointer (&tags_data->custom_reward_id, g_free);
 }
 
 void

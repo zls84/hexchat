@@ -41,6 +41,7 @@ typedef struct
 	char *account;
 	gboolean identified;
 	time_t timestamp;
+	char* custom_reward_id;
 } message_tags_data;
 
 void message_tags_data_free (message_tags_data *tags_data);
