@@ -1,3 +1,8 @@
+# HexChat with Twitch tags (for Chat Cheat)
+
+This modified version of HexChat uses Twitch tags to log the custom-reward-id.  
+custom-reward-id\<user\>  message
+
 # HexChat
 
 HexChat is an IRC client for Windows and UNIX-like operating systems.  
